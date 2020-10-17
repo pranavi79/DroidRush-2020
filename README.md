@@ -48,3 +48,6 @@ failure of the payment).
 ● Firebase Cloud Messaging
 ● Charts_flutter
 6. Class Diagrams:
+<p align="center">
+  <img src="https://github.com/Shamoyeeta/DroidRush-2020/blob/main/IMG_20201010_231211__01.jpg" width="350" title="hover text">
+</p>
