@@ -1,20 +1,11 @@
 import 'dart:collection';
-//package:flutter/material.dart';
-
-// void main(List<String> args) {
-//   runApp(MyApp());
-  
-// }
-
-// class MyApp extends StatelessWidget {
-
-// }
 class User{
   String name;
   String username;
-  //String pass;
-  LinkedHashMap MoneyIOweList = LinkedHashMap<double, String>();//money I owe
-  LinkedHashMap MoneyOwedList = LinkedHashMap<double, String>();//money I lent
+  String pass;
+  String email;
+  LinkedHashMap moneyIOweList = LinkedHashMap<double, String>();//money I owe
+  LinkedHashMap moneyOwedList = LinkedHashMap<double, String>();//money I lent
   //bool paid;
   void getName(String name){
     this.name=name;
@@ -23,19 +14,18 @@ class User{
     return name;
   }
   void getMoneyIOwe(String group,double amount){
-    MoneyIOweList.putIfAbsent(group, ()=>amount);
+    moneyIOweList.putIfAbsent(group, ()=>amount);
   }
   void getMoneyOwed(String group,double amount){
-    MoneyOwedList.putIfAbsent(group, ()=>amount);
+    moneyOwedList.putIfAbsent(group, ()=>amount);
   }
   void remove(String group){
-    MoneyIOweList.remove(group);
+    moneyIOweList.remove(group);
   }
   void remove2(String group){
-    MoneyOwedList.remove(group);
+    moneyOwedList.remove(group);
   }
   //Transactions editTransactions(){}
-  User(String username);
 }
 class Group{
   String group;
@@ -46,18 +36,18 @@ class Group{
   void setGroup(String group,double total,String username){ //user will not have to send his username,automatically from firebase
     this.group=group;
     this.total=total;
-    User u = User(username);
     this.admin=username;
+    User u = User();
     u.getMoneyOwed(group, total);
   }
   void addMembers(String user,double amount){
     grouplist.putIfAbsent(user,()=>amount);
-    User u = User(user);
+    User u = User();
     u.getMoneyIOwe(group, amount);
   }
   void deleteMembers(String user,double amount){
     grouplist.remove(user);
-    User u = User(user);
+    User u = User();
     u.remove(this.group);
   }
   // void editMembers(String user,double amount){
@@ -71,7 +61,7 @@ class Group{
   void deleteGroup(){
     //if grouplist=empty,automatically delete
         if(grouplist.isEmpty){
-        User u = User(this.admin);
+        User u = User();
         u.remove2(this.group);
         }
   }

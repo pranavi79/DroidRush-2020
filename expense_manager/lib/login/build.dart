@@ -1,37 +1,20 @@
+import 'package:expense_manager/home.dart';
+import 'package:expense_manager/signup/build.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:expense_manager/class.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-final kHintTextStyle = TextStyle(
-  color: Colors.white54,
-  fontFamily: 'OpenSans',
-);
-
-final kLabelStyle = TextStyle(
-  color: Colors.white,
-  fontWeight: FontWeight.bold,
-  fontFamily: 'OpenSans',
-);
-
-final kBoxDecorationStyle = BoxDecoration(
-  color: Color(0xFF6CA8F1),
-  borderRadius: BorderRadius.circular(10.0),
-  boxShadow: [
-    BoxShadow(
-      color: Colors.black12,
-      blurRadius: 6.0,
-      offset: Offset(0, 2),
-    ),
-  ],
-);
+import 'package:shared_preferences/shared_preferences.dart';
+import 'utilities.dart';
+User u = User();
+String _email=u.email;
+String _password=u.pass;
 class LoginScreen extends StatefulWidget {
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  LoginScreenState createState() => LoginScreenState();
 }
-
-class _LoginScreenState extends State<LoginScreen> {
-  bool _rememberMe = false;
-
-  Widget _buildEmailTF() {
+class LoginScreenState extends State<LoginScreen> {
+  Widget buildEmailTF() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -60,13 +43,15 @@ class _LoginScreenState extends State<LoginScreen> {
               hintText: 'Enter your Email',
               hintStyle: kHintTextStyle,
             ),
+            onChanged: (String email){
+               _email=email;
+            },
           ),
         ),
       ],
     );
   }
-
-  Widget _buildPasswordTF() {
+  Widget buildPasswordTF() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -95,13 +80,15 @@ class _LoginScreenState extends State<LoginScreen> {
               hintText: 'Enter your Password',
               hintStyle: kHintTextStyle,
             ),
+                        onChanged: (String password){
+               _password=password;
+            },
           ),
         ),
       ],
     );
   }
-
-  Widget _buildForgotPasswordBtn() {
+   Widget buildForgotPasswordBtn() {
     return Container(
       alignment: Alignment.centerRight,
       child: FlatButton(
@@ -114,41 +101,13 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
-  Widget _buildRememberMeCheckbox() {
-    return Container(
-      height: 20.0,
-      child: Row(
-        children: <Widget>[
-          Theme(
-            data: ThemeData(unselectedWidgetColor: Colors.white),
-            child: Checkbox(
-              value: _rememberMe,
-              checkColor: Colors.green,
-              activeColor: Colors.white,
-              onChanged: (value) {
-                setState(() {
-                  _rememberMe = value;
-                });
-              },
-            ),
-          ),
-          Text(
-            'Remember me',
-            style: kLabelStyle,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLoginBtn() {
+  Widget buildLoginBtn() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
       child: RaisedButton(
         elevation: 5.0,
-        onPressed: () => print('Login Button Pressed'),
+        onPressed: signIn,
         padding: EdgeInsets.all(15.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
@@ -167,23 +126,37 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
-  Widget _buildSignInWithText() {
-    return Column(
-      children: <Widget>[
-        Text(
-          '- OR -',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w400,
-          ),
+    Widget buildSignupBtn() {
+    return GestureDetector(
+      onTap: () {
+        print('Sign Up Button Pressed');
+        Navigator.push(
+            context,
+            new MaterialPageRoute(
+                builder: (BuildContext context) => SignUpScreen()));
+      },
+      child: RichText(
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: 'Don\'t have an Account? ',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18.0,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            TextSpan(
+              text: 'Sign Up',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
-        SizedBox(height: 20.0),
-        Text(
-          'Sign in with',
-          style: kLabelStyle,
-        ),
-      ],
+      ),
     );
   }
   @override
@@ -233,15 +206,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       SizedBox(height: 30.0),
-                      _buildEmailTF(),
+                      buildEmailTF(),
                       SizedBox(
                         height: 30.0,
                       ),
-                      _buildPasswordTF(),
-                      _buildForgotPasswordBtn(),
-                      _buildRememberMeCheckbox(),
-                      _buildLoginBtn(),
-                      _buildSignInWithText(),
+                      buildPasswordTF(),
+                      buildForgotPasswordBtn(),
+                      buildLoginBtn(),
+                      buildSignupBtn(),
                     ],
                   ),
                 ),
@@ -252,4 +224,19 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
+  void signIn() async {
+      try{
+        SharedPreferences myPrefs = await SharedPreferences.getInstance();
+        myPrefs.setString('email',_email);
+        myPrefs.setString('password',_password);
+        final String email = myPrefs.getString('email');
+        final String password = myPrefs.getString('password');
+        await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+        //FirebaseUser user = result.user;
+        Navigator.push(context,MaterialPageRoute(builder: (context) => HomeScreen(),),);
+      }catch(e){
+        print(e.message);
+      }
+    }
 }
