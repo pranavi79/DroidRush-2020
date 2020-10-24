@@ -6,9 +6,11 @@ import 'package:expense_manager/class.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'utilities.dart';
-User u = User();
-String _email=u.email;
-String _password=u.pass;
+
+Person u = Person() ;
+String _email = u.email;
+String _password = u.pass;
+
 class LoginScreen extends StatefulWidget {
   @override
   LoginScreenState createState() => LoginScreenState();

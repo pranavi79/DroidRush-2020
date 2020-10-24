@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'utilities.dart';
-import 'package:expense_manager/login/build.dart';
+import 'package:expense_manager/login/loginScreen.dart';
 import 'package:expense_manager/class.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-User u = User();
+
+Person u = Person();
 String _email=u.email;
 String _password=u.pass;
 String _name=u.name;
@@ -272,12 +273,14 @@ Widget buildSignUp() {
   }
 void signUp() async {
       try{
-        AuthResult result = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password);
+       // AuthResult
+        UserCredential result = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password);
         FirebaseUser user = result.user;
         user.sendEmailVerification();
         Firestore.instance.collection('users').document().setData({ 'name':_name , 'username':_username ,});
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
-      }catch(e){
+      }
+      catch(e){
         print(e.message);
       }
     }

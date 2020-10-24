@@ -1,5 +1,5 @@
 import 'dart:collection';
-class User{
+class Person{
   String name;
   String username;
   String pass;
@@ -37,22 +37,22 @@ class Group{
     this.group=group;
     this.total=total;
     this.admin=username;
-    User u = User();
+    Person u = Person() ;
     u.getMoneyOwed(group, total);
   }
   void addMembers(String user,double amount){
     grouplist.putIfAbsent(user,()=>amount);
-    User u = User();
+    Person u = Person() ;
     u.getMoneyIOwe(group, amount);
   }
   void deleteMembers(String user,double amount){
     grouplist.remove(user);
-    User u = User();
+    Person u = Person() ;
     u.remove(this.group);
   }
   // void editMembers(String user,double amount){
   //   //edit individual amount
-  //   User u =new User(user);
+  //   Person u =new User(user);
   //   u.edit(this.group,amount);
   // }
   void editGroup(){
@@ -61,7 +61,7 @@ class Group{
   void deleteGroup(){
     //if grouplist=empty,automatically delete
         if(grouplist.isEmpty){
-        User u = User();
+        Person u = Person() ;
         u.remove2(this.group);
         }
   }
