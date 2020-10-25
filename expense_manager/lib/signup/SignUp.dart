@@ -5,6 +5,10 @@ import 'package:expense_manager/login/loginScreen.dart';
 import 'package:expense_manager/class.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:expense_manager/fireauth.dart';
+import 'package:expense_manager/home.dart';
+
 
 Person u = Person();
 String _email=u.email;
@@ -20,6 +24,9 @@ class SignUpScreen extends StatefulWidget {
   SignUpScreenState createState() => SignUpScreenState();
 }
 class SignUpScreenState extends State<SignUpScreen> {
+
+  fireauth _fire=fireauth();
+
 Widget buildSignUp() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -274,14 +281,23 @@ Widget buildSignUp() {
 void signUp() async {
       try{
        // AuthResult
-        UserCredential result = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password);
+        UserCredential user=await _fire.Create(_email, _password);
+        await user.user.updateProfile(displayName: _name,);
+        await user.user.updateEmail(_email);
+        _fire.Reload();
+        User curr=await _fire.Current();
+
+        Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen(curr: curr)));
+/*
+      UserCredential result = await _fire.Create( _email, _password);
         FirebaseUser user = result.user;
         user.sendEmailVerification();
         Firestore.instance.collection('users').document().setData({ 'name':_name , 'username':_username ,});
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
-      }
+      */}
       catch(e){
         print(e.message);
       }
     }
   }
+

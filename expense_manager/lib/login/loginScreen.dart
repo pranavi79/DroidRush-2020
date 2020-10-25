@@ -1,5 +1,5 @@
 import 'package:expense_manager/home.dart';
-import 'package:expense_manager/signup/build.dart';
+import 'package:expense_manager/signup/SignUp.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:expense_manager/class.dart';

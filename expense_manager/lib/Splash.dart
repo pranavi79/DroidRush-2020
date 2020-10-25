@@ -3,7 +3,7 @@ import 'package:expense_manager/login/loginScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'FireAuth.dart';
+import 'fireauth.dart';
 import 'package:expense_manager/home.dart';
 
 class SplashPage extends StatefulWidget {

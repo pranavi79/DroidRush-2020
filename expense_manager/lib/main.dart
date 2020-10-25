@@ -3,12 +3,13 @@ import 'package:expense_manager/login/loginScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:expense_manager/Splash.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp());
+  runApp(Phoenix(child: MyApp()));
 }
  //Hello
 class MyApp extends StatelessWidget {
