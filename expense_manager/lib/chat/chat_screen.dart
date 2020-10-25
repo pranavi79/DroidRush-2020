@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
-import 'user_model.dart';
+import 'user_model.dart';// as model;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-final _firestore = Firestore.instance;
-FirebaseUser loggedInUser;
-ScrollController scrollController = ScrollController();
-class ChatScreen extends StatefulWidget {
-  final User user;
+import 'package:expense_manager/class.dart';
 
-  ChatScreen({this.user});
+final _firestore = FirebaseFirestore.instance;
+ScrollController scrollController = ScrollController();
+
+
+class ChatScreen extends StatefulWidget {
+  final ChatUser pp;
+
+  ChatScreen({this.pp});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -17,6 +20,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
     final messageTextController = TextEditingController();
   final _auth = FirebaseAuth.instance;
+  User LInUser;
     String messageText;
     @override
   void initState() {
@@ -27,9 +31,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void getCurrentUser() async {
     try {
-      final user = await _auth.currentUser();
-      if (user != null) {
-        loggedInUser = user;
+      User hey = await _auth.currentUser;
+      if (hey != null) {
+        LInUser= hey;
       }
     } catch (e) {
       print(e);
@@ -68,7 +72,7 @@ class _ChatScreenState extends State<ChatScreen> {
                messageTextController.clear();
               _firestore.collection('messages').add({
                         'text': messageText,
-                        'sender': loggedInUser.email,
+                        'sender': LInUser?.email,
               });
               },
           ),
@@ -88,7 +92,7 @@ class _ChatScreenState extends State<ChatScreen> {
           text: TextSpan(
             children: [
               TextSpan(
-                  text: widget.user.name,
+                  text: widget.pp?.name,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w400,
@@ -106,7 +110,7 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Column(
         children: <Widget>[
-          MessagesStream(),
+          MessagesStream(LInUser: LInUser,),
           _sendMessageArea(),
         ],
       ),
@@ -114,6 +118,8 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 }
 class MessagesStream extends StatelessWidget {
+  final User LInUser;
+  MessagesStream({this.LInUser});
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -126,13 +132,14 @@ class MessagesStream extends StatelessWidget {
             ),
           );
         }
-        final messages = snapshot.data.documents;
+        // ignore: deprecated_member_use
+        final messages = snapshot.data.docs;
         List<MessageBubble> messageBubbles = [];
         for (var message in messages) {
-          final messageText = message.data['text'];
-          final messageSender = message.data['sender'];
+          final messageText = message.data()['text'];
+          final messageSender = message.data()['sender'];
 
-          final currentUser = loggedInUser.email;
+          final currentUser = LInUser?.email;
 
           final messageBubble = MessageBubble(
             sender: messageSender,

@@ -1,29 +1,29 @@
-
-class User {
+class ChatUser {
   final int id;
   final String name;
 
-  User({
+  ChatUser({
     this.id,
     this.name,
   });
 }
 
 // YOU - current user
-final User currentUser = User(
+final ChatUser currentUser = ChatUser(
   id: 0,
   name: 'Nick Fury',
 );
 
 // USERS
-final User ironMan = User(
+final ChatUser ironMan = ChatUser(
   id: 1,
   name: 'Iron Man',
 );
-final User captainAmerica = User(
+final ChatUser captainAmerica = ChatUser(
   id: 2,
   name: 'Captain America',
 );
+/*
 final User hulk = User(
   id: 3,
   name: 'Hulk',
@@ -47,4 +47,4 @@ final User thor = User(
 final User captainMarvel = User(
   id: 8,
   name: 'Captain Marvel',
-);
+);*/
