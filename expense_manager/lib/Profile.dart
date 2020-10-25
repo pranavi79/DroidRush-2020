@@ -35,7 +35,7 @@ class _ProfileState extends State<Profile> {
         children: <Widget>[
         Center(
           child: Text(
-            "Welcome to your profile, $s",   //+ curr?.displayName==null?'John Appleseed':curr?.displayName,
+            "Welcome to your profile, $s.",   //+ curr?.displayName==null?'John Appleseed':curr?.displayName,
 
           ),
         ),
