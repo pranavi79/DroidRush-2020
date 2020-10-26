@@ -1,5 +1,3 @@
-import 'dart:async';
-import 'package:expense_manager/login/loginScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:expense_manager/Splash.dart';

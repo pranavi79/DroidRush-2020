@@ -26,6 +26,6 @@ class fireauth {
   }
 
   Future<User> Current() async {
-    User current = await _auth.currentUser;
+    User current = _auth.currentUser;
     return current;
   }}
