@@ -22,7 +22,7 @@ class _SplashPageState extends State<SplashPage> {
 
   void initState() {
     fireauth _fire=fireauth();
-    Future.delayed(const Duration(seconds: 7), () {
+    Future.delayed(const Duration(seconds: 3), () {
       _fire.Current().then((current)
       {
         setState(() {
