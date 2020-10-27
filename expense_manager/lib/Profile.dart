@@ -1,5 +1,3 @@
-
-
 import 'package:expense_manager/fireauth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +7,6 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 class Profile extends StatefulWidget {
   final User curr;
   Profile({this.curr});
-
-
   @override
   _ProfileState createState() => _ProfileState();
 }
@@ -19,15 +15,19 @@ class _ProfileState extends State<Profile> {
   User curr;
   final _fire=fireauth();
   @override
+
   void initState() {
-    curr=widget.curr;
+    //curr=widget.curr;
     super.initState();
   }
 
   Widget build(BuildContext context) {
   //= curr.email==null?'John Appleseed':curr?.email;
   FirebaseAuth auth = FirebaseAuth.instance;
-    String s=auth.currentUser?.displayName;
+  User curr = auth.currentUser;
+    String s=curr?.displayName;
+
+
 
     return Scaffold(
       body: Column(
