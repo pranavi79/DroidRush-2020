@@ -6,6 +6,8 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'charts/Chart for a Month/WeekinMonth_class.dart';
 import 'charts/Chart for a Month/LineCharts.dart';
 import 'charts/Chart for a Month/WeekinMonth_chart.dart';
+import 'charts/Chart for a Week/DaysinWeek_chart.dart';
+import 'charts/Chart for a Week/DaysinWeek_class.dart';
 
 
 
@@ -20,7 +22,7 @@ class _ProfileState extends State<Profile> {
   User curr;
   final _fire=fireauth();
 
-  final List<WeekExpenditure> data = [
+  final List<WeekExpenditure> data1 = [
     WeekExpenditure(
       week: "Week 1",
       amt: 4,
@@ -41,6 +43,45 @@ class _ProfileState extends State<Profile> {
       amt: 3,
       barColor: charts.ColorUtil.fromDartColor(Colors.blue),
     ),
+  ];
+
+  final List<DayExpenditure> data2 = [
+    DayExpenditure(
+      day: "Mon",
+      amt: 4,
+      barColor: charts.ColorUtil.fromDartColor(Colors.blue),
+    ),
+    DayExpenditure(
+      day: "Tues",
+      amt: 1,
+      barColor: charts.ColorUtil.fromDartColor(Colors.blue),
+    ),
+    DayExpenditure(
+      day: "Wed",
+      amt: 2,
+      barColor: charts.ColorUtil.fromDartColor(Colors.blue),
+    ),
+    DayExpenditure(
+      day: "Thurs",
+      amt: 3,
+      barColor: charts.ColorUtil.fromDartColor(Colors.blue),
+    ),
+    DayExpenditure(
+      day: "Fri",
+      amt: 3,
+      barColor: charts.ColorUtil.fromDartColor(Colors.blue),
+    ),
+    DayExpenditure(
+      day: "Sat",
+      amt: 3,
+      barColor: charts.ColorUtil.fromDartColor(Colors.blue),
+    ),
+    DayExpenditure(
+      day: "Sun",
+      amt: 3,
+      barColor: charts.ColorUtil.fromDartColor(Colors.blue),
+    ),
+
   ];
 
 
@@ -80,13 +121,20 @@ class _ProfileState extends State<Profile> {
               Text('Hello'),
 
               WeekinMonthChart(
-                data: data,
+                data: data1,
               ),
+
               SizedBox(
                   height:100.0
               ),
               //LineCharts(),
               Text('Great chart, huh?'),
+              SizedBox(
+                  height:100.0
+              ),
+              DaysinWeekChart(
+                data: data2,
+              ),
               SizedBox(
                   height:500.0
               ),
