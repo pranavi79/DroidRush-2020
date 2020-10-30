@@ -1,21 +1,33 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'message_model.dart';
+import 'package:intl/intl.dart';
 import 'chat_screen.dart';
 class HomeScreen2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: ListView.builder(
-        itemCount: chats.length,
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('groups').snapshots(),
+    builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+        return Center(
+          child: CircularProgressIndicator(
+			valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+          ),
+        );
+      } else {
+        return ListView.builder(
+          itemCount: snapshot.data.documents.length,
         itemBuilder: (BuildContext context, int index) {
-          final Message chat = chats[index];
+        final chat = snapshot.data.documents[index];
+       // final chat = snapshot.data.documents[index];
           return GestureDetector(
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (_) => ChatScreen(
-                  pp: chat.sender,
+                  pp: chat.data()['group'],
                 ),
               ),
             ),
@@ -41,7 +53,7 @@ class HomeScreen2 extends StatelessWidget {
                     child: CircleAvatar(
                       radius: 35,
                       backgroundColor: Colors.blue,
-                      child: Text(chat.sender.name[0]),
+                      child: Text(chat.data()['group'][0]),
                     ),
                   ),
                   Container(
@@ -57,7 +69,7 @@ class HomeScreen2 extends StatelessWidget {
                             Row(
                               children: <Widget>[
                                 Text(
-                                  chat.sender.name,
+                                  chat.data()['group'],
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -68,31 +80,31 @@ class HomeScreen2 extends StatelessWidget {
                                       ),
                               ],
                             ),
-                            Text(
-                              chat.time,
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w300,
-                                color: Colors.black54,
-                              ),
-                            ),
+                            //Text(
+                            //  ((chat.data()['time']).toDate()).toString(),
+                            //   style: TextStyle(
+                            //     fontSize: 11,
+                            //     fontWeight: FontWeight.w300,
+                            //     color: Colors.black54,
+                            //   ),
+                            // ),
                           ],
                         ),
                         SizedBox(
                           height: 10,
                         ),
-                        Container(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            chat.text,
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.black54,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
-                        ),
+                        // Container(
+                        //   alignment: Alignment.topLeft,
+                        //   child: Text(
+                        //     "a",
+                        //     style: TextStyle(
+                        //       fontSize: 13,
+                        //       color: Colors.black54, 
+                        //     ),
+                        //     overflow: TextOverflow.ellipsis,
+                        //     maxLines: 2,
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -101,6 +113,9 @@ class HomeScreen2 extends StatelessWidget {
             ),
           );
         },
+        );
+    }
+    }
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: (){},

@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
-import 'user_model.dart';// as model;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:expense_manager/class.dart';
-
 final _firestore = FirebaseFirestore.instance;
 ScrollController scrollController = ScrollController();
 
 
 class ChatScreen extends StatefulWidget {
-  final ChatUser pp;
+  final String pp;
 
   ChatScreen({this.pp});
 
@@ -31,7 +28,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void getCurrentUser() async {
     try {
-      User hey = await _auth.currentUser;
+      User hey = _auth.currentUser;
       if (hey != null) {
         LInUser= hey;
       }
@@ -46,12 +43,12 @@ class _ChatScreenState extends State<ChatScreen> {
       color: Colors.white,
       child: Row(
         children: <Widget>[
-          IconButton(
-            icon: Icon(Icons.monetization_on),
-            iconSize: 25,
-            color: Colors.yellow[700],
-            onPressed: () {},
-          ),
+          // IconButton(
+          //   icon: Icon(Icons.monetization_on),
+          //   iconSize: 25,
+          //   color: Colors.yellow[700],
+          //   onPressed: () {},
+          // ),
           Expanded(
             child: TextField(
               controller: messageTextController,
@@ -73,6 +70,7 @@ class _ChatScreenState extends State<ChatScreen> {
               _firestore.collection('messages').add({
                         'text': messageText,
                         'sender': LInUser?.email,
+                        'time':DateTime.now().millisecondsSinceEpoch.toString(),
               });
               },
           ),
@@ -92,7 +90,7 @@ class _ChatScreenState extends State<ChatScreen> {
           text: TextSpan(
             children: [
               TextSpan(
-                  text: widget.pp?.name,
+                  text: widget.pp,
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w400,
@@ -123,7 +121,7 @@ class MessagesStream extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.collection('messages').snapshots(),
+      stream: _firestore.collection('messages').orderBy('time', descending: true).snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
@@ -138,7 +136,6 @@ class MessagesStream extends StatelessWidget {
         for (var message in messages) {
           final messageText = message.data()['text'];
           final messageSender = message.data()['sender'];
-
           final currentUser = LInUser?.email;
 
           final messageBubble = MessageBubble(
