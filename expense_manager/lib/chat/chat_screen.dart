@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import '../transaction/NewTransact.dart';
+import '../transaction/NewTransact.dart';
+
 final _firestore = FirebaseFirestore.instance;
 ScrollController scrollController = ScrollController();
-
 
 class ChatScreen extends StatefulWidget {
   final String pp;
@@ -15,11 +18,11 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-    final messageTextController = TextEditingController();
+  final messageTextController = TextEditingController();
   final _auth = FirebaseAuth.instance;
   User LInUser;
-    String messageText;
-    @override
+  String messageText;
+  @override
   void initState() {
     super.initState();
 
@@ -30,12 +33,13 @@ class _ChatScreenState extends State<ChatScreen> {
     try {
       User hey = _auth.currentUser;
       if (hey != null) {
-        LInUser= hey;
+        LInUser = hey;
       }
     } catch (e) {
       print(e);
     }
   }
+
   _sendMessageArea() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8),
@@ -52,9 +56,9 @@ class _ChatScreenState extends State<ChatScreen> {
           Expanded(
             child: TextField(
               controller: messageTextController,
-                      onChanged: (value) {
-                        messageText = value;
-                      },
+              onChanged: (value) {
+                messageText = value;
+              },
               decoration: InputDecoration.collapsed(
                 hintText: 'Send a message..',
               ),
@@ -66,18 +70,31 @@ class _ChatScreenState extends State<ChatScreen> {
             iconSize: 25,
             color: Theme.of(context).primaryColor,
             onPressed: () {
-               messageTextController.clear();
+              messageTextController.clear();
               _firestore.collection('messages').add({
-                        'text': messageText,
-                        'sender': LInUser?.email,
-                        'time':DateTime.now().millisecondsSinceEpoch.toString(),
+                'text': messageText,
+                'sender': LInUser?.email,
+                'time': DateTime.now().millisecondsSinceEpoch.toString(),
               });
-              },
+            },
           ),
+          IconButton(
+              icon: Icon(Icons.attach_money),
+              iconSize: 25,
+              color: Theme.of(context).primaryColor,
+              onPressed: () {
+                NewTransaction().build(context);
+                // Navigator.push(
+                //     context,
+                //     new MaterialPageRoute(
+                //         builder: (BuildContext context) =>
+                //             new NewTransaction()));
+              })
         ],
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -95,7 +112,6 @@ class _ChatScreenState extends State<ChatScreen> {
                     fontSize: 20,
                     fontWeight: FontWeight.w400,
                   )),
-              
             ],
           ),
         ),
@@ -108,20 +124,26 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Column(
         children: <Widget>[
-          MessagesStream(LInUser: LInUser,),
+          MessagesStream(
+            LInUser: LInUser,
+          ),
           _sendMessageArea(),
         ],
       ),
     );
   }
 }
+
 class MessagesStream extends StatelessWidget {
   final User LInUser;
   MessagesStream({this.LInUser});
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: _firestore.collection('messages').orderBy('time', descending: true).snapshots(),
+      stream: _firestore
+          .collection('messages')
+          .orderBy('time', descending: true)
+          .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return Center(
