@@ -1,7 +1,5 @@
 // AlertDialog to enter new transaction details.
 
-//import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 //import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
@@ -11,80 +9,143 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import '../class.dart';
 
-class NewTransaction {
-  //extends StatelessWidget {
-  TextEditingController _amount = TextEditingController();
+class NewTransact extends StatefulWidget {
+  final List<String> usernames;
+  NewTransact({Key key, @required this.usernames}) : super(key: key);
+  @override
+  _NewTransactState createState() => _NewTransactState();
+}
+
+class _NewTransactState extends State<NewTransact> {
+  TextEditingController _amount = TextEditingController(text: "0");
   TextEditingController _description = TextEditingController();
   final databaseReference = FirebaseFirestore.instance;
 
-  List<String> groupMembers = ['caron', 'pranavi'];
+  Map<String, double> dividedAmount = {};
+  Map<String, TextEditingController> amountValues = {};
 
-  _displayDialog(BuildContext context) async {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text('New Transaction'),
-            content: Column(
-              children: <Widget>[
-                TextField(
-                  controller: _amount,
-                  textInputAction: TextInputAction.go,
-                  keyboardType: TextInputType.numberWithOptions(),
-                  decoration: InputDecoration(hintText: 'Total Amount'),
-                ),
-                TextField(
-                  controller: _description,
-                  keyboardType: TextInputType.multiline,
-                  textInputAction: TextInputAction.newline,
-                  decoration: InputDecoration(hintText: 'What is this for?'),
-                ),
-                // ListView.builder(
-                //   itemCount: groupMembers.length,
-                //   itemBuilder: (context,index){
-                //     return Card(
-                //       child: Row(
-                //         children: <Widget>[
-                //           Text(groupMembers[index]),
-                //           TextField(
-                //             controller: _amount,
-                //             textInputAction: TextInputAction.go,
-                //             keyboardType: TextInputType.numberWithOptions(),
-                //             decoration: InputDecoration(hintText: 'Total Amount'),
-                //           ),
-                //         ],
-                //       ),
-                //     );
-                //   })
-              ],
-            ),
-            actions: <Widget>[
-              new RaisedButton(
-                onPressed: () {
-                  User user = FirebaseAuth.instance.currentUser;
-                  Transactions transactions = Transactions();
-                  transactions.amount = double.parse(_amount.text);
-                  transactions.comment = _description.text;
-                  transactions.receiver = user.email;
-                  transactions.sender = {'caron': double.parse(_amount.text)};
-                  pushNewTransaction(transactions);
-                },
-                child: Text('Submit'),
-              ),
-              new RaisedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: Text('Cancel'),
-              )
-            ],
-          );
-        });
+  @override
+  void initState() {
+    for (var username in widget.usernames) {
+      var textEditingController = new TextEditingController(text: "0");
+      amountValues.putIfAbsent(username, () => textEditingController);
+    }
   }
 
-  //@override
-  void build(BuildContext context) {
-    _displayDialog(context);
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("New Transaction"),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () {
+              double total = double.parse(_amount.text);
+              double eachShare = total / (1 + widget.usernames.length);
+              for (var username in widget.usernames) {
+                amountValues[username].text = eachShare.toString();
+              }
+            },
+            child: Text('Split Equally'),
+          ),
+          new FlatButton(
+            onPressed: () {
+              User user = FirebaseAuth.instance.currentUser;
+              amountValues.forEach((k, v) {
+                takeDivision(v.text, k);
+              });
+              Transactions transactions = Transactions();
+              transactions.amount = double.parse(_amount.text);
+              transactions.comment = _description.text;
+              transactions.receiver = user.email;
+              transactions.sender = dividedAmount;
+              pushNewTransaction(transactions);
+              Navigator.of(context).pop();
+            },
+            child: Text('Submit'),
+          ),
+        ],
+      ),
+      body: Container(
+        padding: EdgeInsets.all(15),
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Expanded(flex: 3, child: Text("Total Bill")),
+                Expanded(
+                  flex: 4,
+                  child: TextField(
+                    textAlign: TextAlign.right,
+                    controller: _amount,
+                    textInputAction: TextInputAction.go,
+                    keyboardType: TextInputType.numberWithOptions(),
+                    decoration: InputDecoration(hintText: 'Total Amount'),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: <Widget>[
+                Expanded(flex: 3, child: Text("Description")),
+                Expanded(
+                  flex: 4,
+                  child: TextField(
+                    controller: _description,
+                    keyboardType: TextInputType.multiline,
+                    textInputAction: TextInputAction.newline,
+                    decoration: InputDecoration(hintText: 'What is this for?'),
+                  ),
+                ),
+              ],
+            ),
+            Card(
+              margin: EdgeInsets.only(top: 25, bottom: 15),
+              child: Text(
+                "Division",
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                height: 300,
+                width: double.maxFinite,
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: widget.usernames.length,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              flex: 3,
+                              child: Text(widget.usernames[index]),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: TextField(
+                                keyboardType: TextInputType.numberWithOptions(),
+                                decoration: InputDecoration(hintText: 'Amount'),
+                                controller:
+                                    amountValues[widget.usernames[index]],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+              ),
+            )
+          ],
+        ),
+        // ),
+      ),
+    );
+  }
+
+  void takeDivision(String text, String username) {
+    double amount = double.parse(text);
+    dividedAmount.putIfAbsent(username, () => amount);
   }
 
   void pushNewTransaction(Transactions transaction) async {
