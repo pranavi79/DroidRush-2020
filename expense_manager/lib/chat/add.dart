@@ -3,7 +3,6 @@ import 'package:expense_manager/chat/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import '../home.dart';
 final _firestore = FirebaseFirestore.instance;
 final _auth = FirebaseAuth.instance;
