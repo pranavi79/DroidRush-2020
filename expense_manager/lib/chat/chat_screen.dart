@@ -2,7 +2,9 @@ import 'package:expense_manager/chat/view.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:expense_manager/transaction/NewTransact.dart';
+
+import '../transaction/NewTransact.dart';
+
 final _firestore = FirebaseFirestore.instance;
 ScrollController scrollController = ScrollController();
 
@@ -17,6 +19,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final messageTextController = TextEditingController();
   final _auth = FirebaseAuth.instance;
+  List<String> groupMembers = ["caron", "pranavi"];
   User LInUser;
   String messageText;
   @override
@@ -48,11 +51,13 @@ class _ChatScreenState extends State<ChatScreen> {
             iconSize: 25,
             color: Colors.yellow[700],
             onPressed: () {               
-              //  Navigator.push(
-              //       context,
-              //       new MaterialPageRoute(
-              //           builder: (BuildContext context) =>
-              //               NewTransaction()));
+                         //NewTransaction().build(context, groupMembers);
+                Navigator.of(context).push(new MaterialPageRoute(
+                    builder: (BuildContext context) {
+                      return new NewTransact(usernames: groupMembers);
+                    },
+                    fullscreenDialog: true));
+              })
               },
           ),
           Expanded(
