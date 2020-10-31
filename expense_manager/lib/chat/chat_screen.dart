@@ -83,12 +83,12 @@ class _ChatScreenState extends State<ChatScreen> {
               iconSize: 25,
               color: Theme.of(context).primaryColor,
               onPressed: () {
-                NewTransaction().build(context, groupMembers);
-                // Navigator.push(
-                //     context,
-                //     new MaterialPageRoute(
-                //         builder: (BuildContext context) =>
-                //             new NewTransaction()));
+                //NewTransaction().build(context, groupMembers);
+                Navigator.of(context).push(new MaterialPageRoute(
+                    builder: (BuildContext context) {
+                      return new NewTransact(usernames: groupMembers);
+                    },
+                    fullscreenDialog: true));
               })
         ],
       ),
