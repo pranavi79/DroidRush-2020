@@ -57,9 +57,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       return new NewTransact(usernames: groupMembers);
                     },
                     fullscreenDialog: true));
-              })
-              },
-          ),
+              }),
           Expanded(
             child: TextField(
               controller: messageTextController,
