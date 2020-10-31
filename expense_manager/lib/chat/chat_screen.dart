@@ -15,7 +15,6 @@ class ChatScreen extends StatefulWidget {
   @override
   _ChatScreenState createState() => _ChatScreenState();
 }
-
 class _ChatScreenState extends State<ChatScreen> {
   final messageTextController = TextEditingController();
   final _auth = FirebaseAuth.instance;
@@ -25,7 +24,6 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-
     getCurrentUser();
   }
 
@@ -47,12 +45,20 @@ class _ChatScreenState extends State<ChatScreen> {
       color: Colors.white,
       child: Row(
         children: <Widget>[
-          // IconButton(
-          //   icon: Icon(Icons.monetization_on),
-          //   iconSize: 25,
-          //   color: Colors.yellow[700],
-          //   onPressed: () {},
-          // ),
+          IconButton(
+            icon: Icon(Icons.monetization_on),
+            iconSize: 25,
+            color: Colors.yellow[700],
+            onPressed: () {               
+                         //NewTransaction().build(context, groupMembers);
+                Navigator.of(context).push(new MaterialPageRoute(
+                    builder: (BuildContext context) {
+                      return new NewTransact(usernames: groupMembers);
+                    },
+                    fullscreenDialog: true));
+              })
+              },
+          ),
           Expanded(
             child: TextField(
               controller: messageTextController,
@@ -71,25 +77,13 @@ class _ChatScreenState extends State<ChatScreen> {
             color: Theme.of(context).primaryColor,
             onPressed: () {
               messageTextController.clear();
-              _firestore.collection('messages').add({
+              _firestore.collection(widget.pp).add({
                 'text': messageText,
                 'sender': LInUser?.email,
                 'time': DateTime.now().millisecondsSinceEpoch.toString(),
               });
             },
           ),
-          IconButton(
-              icon: Icon(Icons.attach_money),
-              iconSize: 25,
-              color: Theme.of(context).primaryColor,
-              onPressed: () {
-                //NewTransaction().build(context, groupMembers);
-                Navigator.of(context).push(new MaterialPageRoute(
-                    builder: (BuildContext context) {
-                      return new NewTransact(usernames: groupMembers);
-                    },
-                    fullscreenDialog: true));
-              })
         ],
       ),
     );
@@ -111,7 +105,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w400,
-                  )),
+                  ),
+                  ),
             ],
           ),
         ),
@@ -126,6 +121,7 @@ class _ChatScreenState extends State<ChatScreen> {
         children: <Widget>[
           MessagesStream(
             LInUser: LInUser,
+            pp:widget.pp,
           ),
           _sendMessageArea(),
         ],
@@ -136,12 +132,13 @@ class _ChatScreenState extends State<ChatScreen> {
 
 class MessagesStream extends StatelessWidget {
   final User LInUser;
-  MessagesStream({this.LInUser});
+  final String pp;
+  MessagesStream({this.LInUser,this.pp});
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: _firestore
-          .collection('messages')
+                return StreamBuilder<QuerySnapshot>(
+                  stream: _firestore
+                      .collection(pp)
           .orderBy('time', descending: true)
           .snapshots(),
       builder: (context, snapshot) {
