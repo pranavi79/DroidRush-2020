@@ -110,7 +110,13 @@ class _ProfileState extends State<Profile> {
 
             Center(
               child: Text(
-                "Welcome to your profile, $s.",   //+ curr?.displayName==null?'John Appleseed':curr?.displayName,
+                "Welcome to your profile, $s",   //+ curr?.displayName==null?'John Appleseed':curr?.displayName,
+                style: TextStyle(
+                  fontFamily: 'PlayfairDisplay',
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blueAccent,
+                ),
 
               ),
             ),
@@ -118,28 +124,30 @@ class _ProfileState extends State<Profile> {
                 height:100.0
               ),
               //LineCharts(),
-              Text('Hello'),
+
 
               WeekinMonthChart(
                 data: data1,
               ),
 
               SizedBox(
-                  height:100.0
+                  height:25.0
               ),
               //LineCharts(),
-              Text('Great chart, huh?'),
-              SizedBox(
-                  height:100.0
-              ),
+
+
               DaysinWeekChart(
                 data: data2,
               ),
+
               SizedBox(
-                  height:500.0
+                  height:25.0
               ),
-              //LineCharts(),
-              Text('Yeah, ik ikkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk'),
+
+              DaysinWeekChart(
+                data: data2,
+              ),
+
               SizedBox(
                   height:8.0
               ),

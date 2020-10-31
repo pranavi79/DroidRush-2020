@@ -6,6 +6,7 @@ import 'package:expense_manager/class.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'utilities.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 Person u = Person() ;
 String _email = u.email;
@@ -237,8 +238,23 @@ class LoginScreenState extends State<LoginScreen> {
         await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
         //FirebaseUser user = result.user;
         Navigator.push(context,MaterialPageRoute(builder: (context) => HomeScreen(curr: null,),),);
-      }catch(e){
-        print(e.message);
+      }
+      catch(e){
+
+        String s=e.message;
+        if(e.message==null){
+          s="Fill in the required fields.";
+        }
+        Fluttertoast.showToast(
+
+            msg: s,
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 2,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 12.0
+        );
       }
     }
 }

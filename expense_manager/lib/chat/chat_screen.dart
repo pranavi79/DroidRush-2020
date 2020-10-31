@@ -40,25 +40,26 @@ class _ChatScreenState extends State<ChatScreen> {
 
   _sendMessageArea() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8),
-      height: 70,
-      color: Colors.white,
-      child: Row(
-        children: <Widget>[
-          IconButton(
-            icon: Icon(Icons.monetization_on),
-            iconSize: 25,
-            color: Colors.yellow[700],
-            onPressed: () {               
-                         //NewTransaction().build(context, groupMembers);
-                Navigator.of(context).push(new MaterialPageRoute(
-                    builder: (BuildContext context) {
-                      return new NewTransact(usernames: groupMembers);
-                    },
-                    fullscreenDialog: true));
-              })
+        padding: EdgeInsets.symmetric(horizontal: 8),
+        height: 70,
+        color: Colors.white,
+        child: Row(
+            children: <Widget>[
+        IconButton(
+        icon: Icon(Icons.monetization_on),
+        iconSize: 25,
+        color: Colors.yellow[700],
+        onPressed: () {
+          //NewTransaction().build(context, groupMembers);
+          Navigator.of(context).push(new MaterialPageRoute(
+              builder: (BuildContext context) {
+                return new NewTransact(usernames: groupMembers);
               },
-          ),
+              fullscreenDialog: true));
+        },
+    ),
+
+
           Expanded(
             child: TextField(
               controller: messageTextController,
