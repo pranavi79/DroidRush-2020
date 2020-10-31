@@ -35,12 +35,13 @@ class ViewScreen extends StatelessWidget {
           ),
         );
       } else {
+        final members = snapshot.data.documents[0];
+        List<String> member2=List.from(members['members']);
         return ListView.builder(
-        itemCount: snapshot.data.documents.length,
+        itemCount:member2.length,
         itemBuilder: (BuildContext context, int index) {
-        final member = snapshot.data.documents[index];
-        //List<String> member2=List.from(members['members']);
-           //final member=member2[index];
+        var member=member2[index];
+                        print(index);
             return Container(
               padding: EdgeInsets.symmetric(
                 horizontal: 20,
