@@ -38,9 +38,9 @@ class ViewScreen extends StatelessWidget {
         return ListView.builder(
         itemCount: snapshot.data.documents.length,
         itemBuilder: (BuildContext context, int index) {
-        final members = snapshot.data.documents[index];
-        List<String> member2=List.from(members['members']);
-           final member=member2[index];
+        final member = snapshot.data.documents[index];
+        //List<String> member2=List.from(members['members']);
+           //final member=member2[index];
             return Container(
               padding: EdgeInsets.symmetric(
                 horizontal: 20,

@@ -3,11 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'charts/Chart for a Month/WeekinMonth_class.dart';
-import 'charts/Chart for a Month/LineCharts.dart';
-import 'charts/Chart for a Month/WeekinMonth_chart.dart';
-import 'charts/Chart for a Week/DaysinWeek_chart.dart';
-import 'charts/Chart for a Week/DaysinWeek_class.dart';
+import 'charts/Chart_Month/WeekinMonth_class.dart';
+import 'charts/Chart_Month/LineCharts.dart';
+import 'charts/Chart_Month/WeekinMonth_chart.dart';
+import 'charts/Chart_Week/DaysinWeek_chart.dart';
+import 'charts/Chart_Week/DaysinWeek_class.dart';
 
 
 
