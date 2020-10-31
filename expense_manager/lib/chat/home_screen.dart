@@ -1,14 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+//import 'package:intl/intl.dart';
 import 'chat_screen.dart';
+import 'add.dart';
 class HomeScreen2 extends StatelessWidget {
+     final _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('groups').snapshots(),
+        stream: FirebaseFirestore.instance.collection('groups').where('members',arrayContains: _auth.currentUser?.email).snapshots(),
     builder: (context, snapshot) {
                 if (!snapshot.hasData) {
         return Center(
@@ -118,7 +121,14 @@ class HomeScreen2 extends StatelessWidget {
     }
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){},
+        onPressed: (){
+          return  Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => AddMembers(),
+              ),
+          );
+        },
         child: Icon(Icons.group_add),),
     );
   }

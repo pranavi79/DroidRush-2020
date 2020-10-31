@@ -2,18 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'utilities.dart';
 //import 'package:expense_manager/login/loginScreen.dart';
-import 'package:expense_manager/class.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_manager/fireauth.dart';
 import 'package:expense_manager/home.dart';
 
-
-Person u = Person();
-String _email=u.email;
-String _password=u.pass;
-String _name=u.name;
-String _username=u.username;
+String _email;
+String _password;
+String _name;
+String _username;
 AlertDialog alertDialog=AlertDialog(
                          title: Text("Welcome"),
                          content: Text("Verification link has been sent to your email"),

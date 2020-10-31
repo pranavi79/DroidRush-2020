@@ -1,0 +1,98 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expense_manager/chat/home_screen.dart';
+import 'package:flutter/material.dart';
+final _firestore = FirebaseFirestore.instance;
+class AddMembers extends StatefulWidget{
+  @override
+  AddMembersState createState()=>AddMembersState();
+}
+class AddMembersState extends State<AddMembers>{
+    final addTextController = TextEditingController();
+    String group;
+    String add;
+    final lst=List();
+  Widget build(BuildContext context){
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("New Group"),
+      ),
+      body:  Container(
+        height: double.infinity,
+            child: Column(
+            children: <Widget>[
+              SizedBox(
+                height:10.0
+                ),
+              TextFormField(
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.only(top: 14.0),
+                      hintText: 'Enter your group name',
+                      labelText: 'Group Name',
+                    ),
+                    onChanged: (input){
+                      group=input;
+                    },
+              ),
+              Row(
+              children:<Widget>[
+                TextFormField(
+                  controller: addTextController,
+                  onChanged: (value) {
+                add = value;
+              },
+                decoration: InputDecoration(
+                      hintText: 'Enter Member Email',
+                      labelText: 'Member Name',
+                    ),
+              ),
+              IconButton(
+            icon: Icon(Icons.add),
+            iconSize: 25,
+            color: Colors.blueGrey[100],
+            onPressed: () {
+              addTextController.clear();
+              lst.add(add);
+            },
+              )
+              ],
+              ),
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 25.0),
+          width: 100.0,
+          child: RaisedButton(
+            elevation: 5.0,
+            onPressed:(){
+              _firestore.collection('groups').add({
+                'group':group,
+                'members':lst,
+              });
+               Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => HomeScreen2(),
+              ),
+            );
+            },
+        padding: EdgeInsets.all(15.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+        color: Colors.blue,
+        child: Text(
+          'SUBMIT',
+          style: TextStyle(
+            color: Color(0xFF527DAA),
+            letterSpacing: 1.5,
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'OpenSans',
+          ),
+        ),
+      ),
+    ),
+            ],
+          ),
+      ),
+      );
+  }
+}
