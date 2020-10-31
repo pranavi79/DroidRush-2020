@@ -140,14 +140,14 @@ class _ProfileState extends State<Profile> {
                 data: data2,
               ),
 
-              SizedBox(
+              /*SizedBox(
                   height:25.0
               ),
 
               DaysinWeekChart(
                 data: data2,
               ),
-
+*/
               SizedBox(
                   height:8.0
               ),
