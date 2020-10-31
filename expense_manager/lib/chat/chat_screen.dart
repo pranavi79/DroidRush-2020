@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../transaction/NewTransact.dart';
-import '../transaction/NewTransact.dart';
 
 final _firestore = FirebaseFirestore.instance;
 ScrollController scrollController = ScrollController();
@@ -20,6 +19,7 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final messageTextController = TextEditingController();
   final _auth = FirebaseAuth.instance;
+  List<String> groupMembers = ["caron", "pranavi"];
   User LInUser;
   String messageText;
   @override
@@ -83,7 +83,7 @@ class _ChatScreenState extends State<ChatScreen> {
               iconSize: 25,
               color: Theme.of(context).primaryColor,
               onPressed: () {
-                NewTransaction().build(context);
+                NewTransaction().build(context, groupMembers);
                 // Navigator.push(
                 //     context,
                 //     new MaterialPageRoute(
