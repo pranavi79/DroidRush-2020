@@ -8,6 +8,10 @@ import 'charts/Chart_Month/LineCharts.dart';
 import 'charts/Chart_Month/WeekinMonth_chart.dart';
 import 'charts/Chart_Week/DaysinWeek_chart.dart';
 import 'charts/Chart_Week/DaysinWeek_class.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:expense_manager/charts/Lent/lent_class.dart';
+import 'package:expense_manager/charts/Lent/lent_chart.dart';
 
 
 
@@ -21,6 +25,9 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   User curr;
   final _fire=fireauth();
+  final List<lentobject> lentlist= List<lentobject>();
+
+
 
   final List<WeekExpenditure> data1 = [
     WeekExpenditure(
@@ -87,94 +94,99 @@ class _ProfileState extends State<Profile> {
 
   @override
 
+
+
   void initState() {
-    //curr=widget.curr;
     super.initState();
   }
 
   Widget build(BuildContext context) {
-  //= curr.email==null?'John Appleseed':curr?.email;
   FirebaseAuth auth = FirebaseAuth.instance;
   User curr = auth.currentUser;
 
 
+  //print(lentlist[0].amt);
+
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-
-            Center(
-              child: Text(
-                "Welcome to your profile",   //+ curr?.displayName==null?'John Appleseed':curr?.displayName,
-                style: TextStyle(
-                  fontSize: 30.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blueAccent,
-                ),
-
+      body:StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('transactions').where('receiver',isEqualTo:  auth.currentUser?.email).snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData){
+            return Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
               ),
-            ),
-              SizedBox(
-                height:100.0
-              ),
-              //LineCharts(),
+            );
+          }
+          else {
+            int a= snapshot.data.documents.length;
+          for(int i=0; i<a; i++){
+          final lent = snapshot.data.documents[i];
+          lentobject l= lentobject(
+              comment:  lent.data()['comment'],
+              amt:  lent.data()['amount'],
+              barColor: charts.ColorUtil.fromDartColor(Colors.blue));
+          lentlist.add(l);
+          };
 
-
-              WeekinMonthChart(
-                data: data1,
-              ),
-
-              SizedBox(
-                  height:25.0
-              ),
-              //LineCharts(),
-
-
-              DaysinWeekChart(
-                data: data2,
-              ),
-
-              /*SizedBox(
-                  height:25.0
-              ),
-
-              DaysinWeekChart(
-                data: data2,
-              ),
+            /*return ListView.builder(
+              itemCount:snapshot.data.documents.length,
+              itemBuilder: (BuildContext context, int index)
+              {
+              final lent = snapshot.data.documents[index];
+              lentobject l= lentobject(
+                  comment:  lent.data()['comment'],
+                  amt:  lent.data()['amount'],
+                  barColor: charts.ColorUtil.fromDartColor(Colors.blue));
+              lentlist.add(l);
+              print(index);
 */
-              SizedBox(
-                  height:8.0
-              ),
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
 
-
-              /*Container(
-                child: Center(
-                   child: FlatButton(
-                     color: Colors.blue,
-                     textColor: Colors.white,
-                     disabledColor: Colors.grey,
-                     disabledTextColor: Colors.black,
-                     padding: EdgeInsets.all(8.0),
-                     splashColor: Colors.blueAccent,
-                      onPressed: () {
-                        _fire.out();
-                        Phoenix.rebirth(context);
-                      },
-                      child: Text(
-                        "Sign Out",
+                      Center(
+                        child: Text(
+                          "Welcome to your profile",
+                          //+ curr?.displayName==null?'John Appleseed':curr?.displayName,
+                          style: TextStyle(
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blueAccent,
+                          ),
+                        ),
                       ),
-                    ),
-                ),
-              ),*/
-            ],
-          ),
-        ),
-      ),
+                      SizedBox(
+                          height: 100.0
+                      ),
 
+                      lentchart(
+
+                        data: lentlist,
+                      ),
+
+                      SizedBox(
+                          height: 8.0
+                      ),
+
+                    ],
+                  ),
+                ),
+              );
+
+  //  }
+  //  );
+
+
+
+            ///////////////////WIDGET AND COLUMN AND SCROLL AND PADDING END HERE
+
+          }
+        }),
 
 
       floatingActionButton: FloatingActionButton.extended(
@@ -193,10 +205,10 @@ class _ProfileState extends State<Profile> {
           child: Row(
             children: [
               IconButton(
-                  icon: Icon(Icons.menu),
-                  onPressed: () {},
-                  color: Colors.blue,
-                  ),
+                icon: Icon(Icons.menu),
+                onPressed: () {},
+                color: Colors.blue,
+              ),
 
             ],
           ),
@@ -209,3 +221,6 @@ class _ProfileState extends State<Profile> {
     );
   }
 }
+
+
+

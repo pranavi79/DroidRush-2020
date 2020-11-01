@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:expense_manager/charts/Lent/lent_class.dart';
+import 'package:expense_manager/charts/Lent/lent_chart.dart';
 
 class LentScreen extends StatefulWidget {
   final User curr;
@@ -50,7 +52,15 @@ class _LentScreenState extends State<LentScreen> {
                     itemCount: snapshot.data.documents.length,
                     itemBuilder: (BuildContext context, int index) {
                       final lent = snapshot.data.documents[index];
+                      final lentlist = [];
+
+                      /* lentobject l;
+
+        l.setcomment(lent.data()['comment]']);
+        l.setamt(lent['amount']);
+        lentlist.add(l);*/
                       print(index);
+
                       return Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: 20,
@@ -59,7 +69,7 @@ class _LentScreenState extends State<LentScreen> {
                         child: Row(
                           children: <Widget>[
                             Container(
-                              width: MediaQuery.of(context).size.width * 0.80,
+                              width: MediaQuery.of(context).size.width * 0.90,
                               padding: EdgeInsets.only(
                                 left: 20,
                               ),
@@ -85,6 +95,10 @@ class _LentScreenState extends State<LentScreen> {
                                       )
                                     ],
                                   ),
+
+                                  /*lentchart(
+                          data: lentlist,
+                        ),*/
                                 ],
                               ),
                             ),
