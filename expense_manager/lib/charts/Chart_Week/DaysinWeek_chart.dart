@@ -27,7 +27,12 @@ class DaysinWeekChart extends StatelessWidget {
             children: <Widget>[
               Text(
                 "Average Expenditure Over the Week",
-                style: Theme.of(context).textTheme.bodyText1,//body2,
+                //style: Theme.of(context).textTheme.bodyText1,//body2,
+                style: TextStyle(
+                  color: Colors.blueAccent,
+                  fontWeight: FontWeight.bold,
+
+                ),
               ),
               Expanded(
                 child: charts.BarChart(series, animate: true),

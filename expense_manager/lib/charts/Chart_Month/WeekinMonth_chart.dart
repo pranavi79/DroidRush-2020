@@ -27,7 +27,12 @@ class WeekinMonthChart extends StatelessWidget {
             children: <Widget>[
               Text(
                 "Average Expenditure Over the Month",
-                style: Theme.of(context).textTheme.bodyText1,//body2,
+                //style: Theme.of(context).textTheme.bodyText1,//body2,
+                style: TextStyle(
+                  color: Colors.blueAccent,
+                  fontWeight: FontWeight.bold,
+
+                ),
               ),
               Expanded(
                 child: charts.BarChart(series, animate: true),
