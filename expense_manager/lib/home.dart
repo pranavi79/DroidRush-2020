@@ -1,4 +1,6 @@
 import 'package:expense_manager/chat/home_screen.dart';
+import 'package:expense_manager/lent.dart';
+import 'package:expense_manager/owe.dart';
 import 'package:flutter/material.dart';
 import 'Profile.dart';
 //import 'package:flutter/services.dart';
@@ -64,8 +66,8 @@ class HomeScreenState extends State<HomeScreen> {
           ),
           body: TabBarView(children: [
             Profile(curr: curr),
-            Icon(Icons.money_off),
-            Icon(Icons.attach_money),
+            OweScreen(curr:curr),
+            LentScreen(curr:curr),
             HomeScreen2()
           ]),
         )

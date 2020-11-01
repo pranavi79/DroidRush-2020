@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../transaction/NewTransact.dart';
 final _firestore = FirebaseFirestore.instance;
 ScrollController scrollController = ScrollController();
-
 class ChatScreen extends StatefulWidget {
   final String pp;
   final List<String> groupMembers;
@@ -36,7 +35,7 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  _sendMessageArea() {
+  sendMessageArea() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8),
       height: 70,
@@ -70,7 +69,7 @@ class _ChatScreenState extends State<ChatScreen> {
           IconButton(
             icon: Icon(Icons.send),
             iconSize: 25,
-            color: Theme.of(context).primaryColor,
+            color: Colors.blue,
             onPressed: () {
               messageTextController.clear();
               _firestore.collection(widget.pp).add({
@@ -131,7 +130,7 @@ class _ChatScreenState extends State<ChatScreen> {
             LInUser: LInUser,
             pp:widget.pp,
           ),
-          _sendMessageArea(),
+          sendMessageArea(),
         ],
       ),
     );
