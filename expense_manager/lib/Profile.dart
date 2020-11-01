@@ -96,7 +96,6 @@ class _ProfileState extends State<Profile> {
   //= curr.email==null?'John Appleseed':curr?.email;
   FirebaseAuth auth = FirebaseAuth.instance;
   User curr = auth.currentUser;
-    String s=curr?.displayName;
 
 
 
@@ -110,9 +109,8 @@ class _ProfileState extends State<Profile> {
 
             Center(
               child: Text(
-                "Welcome to your profile, $s",   //+ curr?.displayName==null?'John Appleseed':curr?.displayName,
+                "Welcome to your profile",   //+ curr?.displayName==null?'John Appleseed':curr?.displayName,
                 style: TextStyle(
-                  fontFamily: 'PlayfairDisplay',
                   fontSize: 30.0,
                   fontWeight: FontWeight.bold,
                   color: Colors.blueAccent,

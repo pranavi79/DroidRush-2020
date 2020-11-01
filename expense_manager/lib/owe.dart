@@ -43,23 +43,24 @@ class _OweScreenState extends State<OweScreen> {
     razorpay.clear();
   }
 
-  void openCheckout(){
+  void openCheckout(String a,String e){
     var options = {
       "key" : "rzp_test_CQOkWq0PGhpm3g",
-      "amount" : "num.parse(textEditingController.text)*100",
+      "amount" : num.parse(a)*100,
       "prefill":{
-        "email"
+        "email": e,
       },
       "external" : {
         "wallets" : ["paytm"]
       }
     };
-
     try{
       razorpay.open(options);
+      Navigator.pop(context);
 
     }catch(e){
       print(e.toString());
+      Navigator.pop(context);
     }
 
   }
@@ -67,23 +68,26 @@ class _OweScreenState extends State<OweScreen> {
   void handlerPaymentSuccess(){
     print("Payment success");
     Toast.show("Payment success", context);
+    Navigator.pop(context);
   }
 
   void handlerErrorFailure(){
     print("Payment error");
     Toast.show("Payment error", context);
+    Navigator.pop(context);
   }
 
   void handlerExternalWallet(){
     print("External Wallet");
     Toast.show("External Wallet", context);
+    Navigator.pop(context);
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('transactions').snapshots(),
+        stream: FirebaseFirestore.instance.collection('transactions').where('member',isEqualTo: _auth.currentUser?.email).snapshots(),//FOR CARON: transaction collection hasn't been updated with member field yet so if you see a blank screen,delete where and just do snapshots()
     builder: (context, snapshot) {
                 if (!snapshot.hasData) {
         return Center(
@@ -96,8 +100,12 @@ class _OweScreenState extends State<OweScreen> {
         itemCount:snapshot.data.documents.length,
         itemBuilder: (BuildContext context, int index) {
         final t=snapshot.data.documents[index];
-        print(index);
-            return Container(
+        Map<dynamic,dynamic>sender=Map.from(t['sender']);
+            return GestureDetector(
+            onTap: (){
+              openCheckout(sender[_auth.currentUser?.email].toString(),t.data()['receiver']);
+            },
+            child:Container(
               padding: EdgeInsets.symmetric(
                 horizontal: 20,
                 vertical: 15,
@@ -113,24 +121,15 @@ class _OweScreenState extends State<OweScreen> {
                       children: <Widget>[
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Row(
                               children: <Widget>[
                                 Text(
-                                  t.data()['reciever'],
+                                  t.data()['receiver'],
                                   style: TextStyle(
                                     fontSize: 16,
-                                    fontWeight: FontWeight.bold,
                                   ),
                                 ), 
-                                Padding(
-                                   padding: EdgeInsets.only(right: 20.0),
-                                   child: Icon(
-                                      Icons.monetization_on
-                                     ),
-                                 ),
                                  Text(
-                                   "money",
+                                   sender[_auth.currentUser?.email].toString(),
                                    style:TextStyle(
                                      fontWeight:FontWeight.w300,
                                      color:Colors.grey,
@@ -140,11 +139,10 @@ class _OweScreenState extends State<OweScreen> {
                             ),
                           ],
                         ),
-                      ],
                     ),
-                  ),
                 ],
               ),
+            ),
             );
       }
         );

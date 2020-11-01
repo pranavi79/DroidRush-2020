@@ -1,15 +1,36 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-class LentScreen extends StatelessWidget {
+class LentScreen extends StatefulWidget {
   final User curr;
   LentScreen({this.curr});
+  @override
+  _LentScreenState createState()=>_LentScreenState();
+}
+class _LentScreenState extends State<LentScreen> {
+  final _auth = FirebaseAuth.instance;
+  User curr;
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
+  }
+  void getCurrentUser() async {
+    try {
+      User hey = _auth.currentUser;
+      if (hey != null) {
+        curr = hey;
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('transactions').where('reciever',isEqualTo: curr?.email).snapshots(),
+        stream: FirebaseFirestore.instance.collection('transactions').where('receiver',isEqualTo:  _auth.currentUser?.email).snapshots(),
     builder: (context, snapshot) {
                 if (!snapshot.hasData) {
         return Center(

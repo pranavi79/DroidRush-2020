@@ -36,7 +36,7 @@ class _NewTransactState extends State<NewTransact> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("New Transaction"),
+        title: const Text("New"),
         actions: <Widget>[
           new FlatButton(
             onPressed: () {
@@ -46,7 +46,12 @@ class _NewTransactState extends State<NewTransact> {
                 amountValues[username].text = eachShare.toString();
               }
             },
-            child: Text('Split Equally'),
+            child: Text(
+              'Split Equally',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+              ),
           ),
           new FlatButton(
             onPressed: () {
@@ -62,7 +67,11 @@ class _NewTransactState extends State<NewTransact> {
               pushNewTransaction(transactions);
               Navigator.of(context).pop();
             },
-            child: Text('Submit'),
+            child: Text(
+              'Submit',
+              style: TextStyle(
+                color: Colors.white,
+              ),),
           ),
         ],
       ),
@@ -153,7 +162,8 @@ class _NewTransactState extends State<NewTransact> {
       'receiver': transaction.receiver,
       'amount': transaction.amount,
       'comment': transaction.comment,
-      'sender': transaction.sender
+      'sender': transaction.sender,
+      'member':widget.usernames.remove(transaction.receiver),
     });
   }
 }
