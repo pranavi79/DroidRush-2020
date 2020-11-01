@@ -12,19 +12,26 @@ class HomeScreen extends StatefulWidget {
   @override
   HomeScreenState createState() => HomeScreenState();
 }
+
 class HomeScreenState extends State<HomeScreen> {
   User curr;
   @override
   void initState() {
-    curr=widget.curr;
-    super.initState();}
+    curr = widget.curr;
+    super.initState();
+  }
 
   Widget build(BuildContext context) {
-     return DefaultTabController(
+    return DefaultTabController(
         length: 4,
         child: Scaffold(
           appBar: AppBar(
             automaticallyImplyLeading: false,
+            title: Text("S E T T L E"),
+            leading: IconButton(
+                icon: Image.asset('images/Asset 3.png',
+                    colorBlendMode: BlendMode.colorDodge),
+                onPressed: () {}),
             backgroundColor: Colors.blue,
             elevation: 0,
             bottom: TabBar(
@@ -61,16 +68,14 @@ class HomeScreenState extends State<HomeScreen> {
                       child: Text("Groups"),
                     ),
                   ),
-                ]
-            ),
+                ]),
           ),
           body: TabBarView(children: [
             Profile(curr: curr),
-            OweScreen(curr:curr),
-            LentScreen(curr:curr),
+            OweScreen(curr: curr),
+            LentScreen(curr: curr),
             HomeScreen2()
           ]),
-        )
-     );
+        ));
   }
 }

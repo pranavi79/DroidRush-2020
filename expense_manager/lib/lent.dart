@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 class LentScreen extends StatefulWidget {
   final User curr;
   LentScreen({this.curr});
   @override
-  _LentScreenState createState()=>_LentScreenState();
+  _LentScreenState createState() => _LentScreenState();
 }
+
 class _LentScreenState extends State<LentScreen> {
   final _auth = FirebaseAuth.instance;
   User curr;
@@ -15,6 +17,7 @@ class _LentScreenState extends State<LentScreen> {
     super.initState();
     getCurrentUser();
   }
+
   void getCurrentUser() async {
     try {
       User hey = _auth.currentUser;
@@ -25,69 +28,71 @@ class _LentScreenState extends State<LentScreen> {
       print(e);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('transactions').where('receiver',isEqualTo:  _auth.currentUser?.email).snapshots(),
-    builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-        return Center(
-          child: CircularProgressIndicator(
-			valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-          ),
-        );
-      } else {
-        return ListView.builder(
-        itemCount:snapshot.data.documents.length,
-        itemBuilder: (BuildContext context, int index) {
-        final lent=snapshot.data.documents[index];
-                        print(index);
-            return Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 15,
-              ),
-              child: Row(
-                children: <Widget>[
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.90,
-                    padding: EdgeInsets.only(
-                      left: 20,
-                    ),
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                                Text(
-                                  lent.data()['comment'],
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
-
-                                ),
-                                 Text(
-                                   lent['amount'].toString(),
-                                   style:TextStyle(
-                                     fontWeight:FontWeight.w300,
-                                     color:Colors.grey,
-                                   ),
-                                   textAlign: TextAlign.end,
-                                 )
-                              ],
-                            ),
-                      ],
-                    ),
+        backgroundColor: Colors.white,
+        body: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('transactions')
+                .where('receiver', isEqualTo: _auth.currentUser?.email)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
                   ),
-                ],
-              ),
-            );
-      }
-        );
-        }
-    })
-    );
+                );
+              } else {
+                return ListView.builder(
+                    itemCount: snapshot.data.documents.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final lent = snapshot.data.documents[index];
+                      print(index);
+                      return Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 15,
+                        ),
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.80,
+                              padding: EdgeInsets.only(
+                                left: 20,
+                              ),
+                              child: Column(
+                                children: <Widget>[
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Text(
+                                        lent.data()['comment'],
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      Text(
+                                        lent['amount'].toString(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w300,
+                                          color: Colors.grey,
+                                        ),
+                                        textAlign: TextAlign.end,
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    });
+              }
+            }));
   }
 }
