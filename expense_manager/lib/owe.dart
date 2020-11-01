@@ -83,7 +83,7 @@ class _OweScreenState extends State<OweScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('transactions').where('sender',isEqualTo: curr?.email ).snapshots(),
+        stream: FirebaseFirestore.instance.collection('transactions').snapshots(),
     builder: (context, snapshot) {
                 if (!snapshot.hasData) {
         return Center(
@@ -95,7 +95,7 @@ class _OweScreenState extends State<OweScreen> {
         return ListView.builder(
         itemCount:snapshot.data.documents.length,
         itemBuilder: (BuildContext context, int index) {
-        final t=snapshot.data.document[index];
+        final t=snapshot.data.documents[index];
         print(index);
             return Container(
               padding: EdgeInsets.symmetric(
@@ -117,7 +117,7 @@ class _OweScreenState extends State<OweScreen> {
                             Row(
                               children: <Widget>[
                                 Text(
-                                  t.data()['receiver'],
+                                  t.data()['reciever'],
                                   style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
