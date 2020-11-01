@@ -87,7 +87,7 @@ class _OweScreenState extends State<OweScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('transactions').where('member',isEqualTo: _auth.currentUser?.email).snapshots(),//FOR CARON: transaction collection hasn't been updated with member field yet so if you see a blank screen,delete where and just do snapshots()
+        stream: FirebaseFirestore.instance.collection('transactions').where('member',arrayContains: _auth.currentUser?.email).snapshots(),//FOR CARON: transaction collection hasn't been updated with member field yet so if you see a blank screen,delete where and just do snapshots()
     builder: (context, snapshot) {
                 if (!snapshot.hasData) {
         return Center(

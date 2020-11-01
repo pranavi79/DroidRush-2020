@@ -163,7 +163,7 @@ class _NewTransactState extends State<NewTransact> {
       'amount': transaction.amount,
       'comment': transaction.comment,
       'sender': transaction.sender,
-      'member':widget.usernames.remove(transaction.receiver),
+      'member':widget.usernames,
     });
   }
 }

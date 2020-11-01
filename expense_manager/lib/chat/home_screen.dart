@@ -24,6 +24,8 @@ class HomeScreen2 extends StatelessWidget {
           itemCount: snapshot.data.documents.length,
         itemBuilder: (BuildContext context, int index) {
         final chat = snapshot.data.documents[index];
+        final t=chat['members'].remove(_auth.currentUser?.email);
+        print(t);
           return GestureDetector(
             onTap: () => Navigator.push(
               context,
