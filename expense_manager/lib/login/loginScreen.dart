@@ -6,6 +6,9 @@ import 'package:expense_manager/class.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'utilities.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+
 
 Person u = Person() ;
 String _email = u.email;
@@ -45,14 +48,15 @@ class LoginScreenState extends State<LoginScreen> {
               hintText: 'Enter your Email',
               hintStyle: kHintTextStyle,
             ),
-            onChanged: (String email){
-               _email=email;
+            onChanged: (String email) {
+              _email = email;
             },
           ),
         ),
       ],
     );
   }
+
   Widget buildPasswordTF() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,15 +86,16 @@ class LoginScreenState extends State<LoginScreen> {
               hintText: 'Enter your Password',
               hintStyle: kHintTextStyle,
             ),
-                        onChanged: (String password){
-               _password=password;
+            onChanged: (String password) {
+              _password = password;
             },
           ),
         ),
       ],
     );
   }
-   Widget buildForgotPasswordBtn() {
+
+  Widget buildForgotPasswordBtn() {
     return Container(
       alignment: Alignment.centerRight,
       child: FlatButton(
@@ -103,6 +108,7 @@ class LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
   Widget buildLoginBtn() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -128,7 +134,8 @@ class LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-    Widget buildSignupBtn() {
+
+  Widget buildSignupBtn() {
     return GestureDetector(
       onTap: () {
         print('Sign Up Button Pressed');
@@ -161,6 +168,7 @@ class LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -227,18 +235,37 @@ class LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void signIn() async {
-      try{
-        SharedPreferences myPrefs = await SharedPreferences.getInstance();
-        myPrefs.setString('email',_email);
-        myPrefs.setString('password',_password);
-        final String email = myPrefs.getString('email');
-        final String password = myPrefs.getString('password');
-        await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
-        //FirebaseUser user = result.user;
-        Navigator.push(context,MaterialPageRoute(builder: (context) => HomeScreen(curr: null,),),);
-      }catch(e){
-        print(e.message);
-      }
+  void signIn() async {                               // This function logs the user in with firebase and handles any errors
+
+
+    try {                                           //Tries to log the user in
+
+      SharedPreferences myPrefs = await SharedPreferences.getInstance();
+      myPrefs.setString('email', _email);
+      myPrefs.setString('password', _password);
+      final String email = myPrefs.getString('email');
+      final String password = myPrefs.getString('password');
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email, password: password);
+      Navigator.push(context,
+        MaterialPageRoute(builder: (context) => HomeScreen(curr: null,),),);
     }
+
+    catch (e) {                                   //Handles any errors and prints them as toasts
+      String s = e.message;
+      if (e.message == null) {
+        s = "Fill in the required fields.";
+      }
+      Fluttertoast.showToast(
+
+          msg: s,
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 12.0
+      );
+    }
+  }
 }

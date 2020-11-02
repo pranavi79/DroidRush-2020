@@ -12,7 +12,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:expense_manager/charts/Lent/lent_class.dart';
 import 'package:expense_manager/charts/Lent/lent_chart.dart';
-
+import 'package:expense_manager/charts/Owe/owe_class.dart';
+import 'package:expense_manager/charts/Owe/owe_chart.dart';
 
 
 class Profile extends StatefulWidget {
@@ -26,76 +27,9 @@ class _ProfileState extends State<Profile> {
   User curr;
   final _fire=fireauth();
   final List<lentobject> lentlist= List<lentobject>();
-
-
-
-  final List<WeekExpenditure> data1 = [
-    WeekExpenditure(
-      week: "Week 1",
-      amt: 4,
-      barColor: charts.ColorUtil.fromDartColor(Colors.blue),
-    ),
-    WeekExpenditure(
-      week: "Week 2",
-      amt: 1,
-      barColor: charts.ColorUtil.fromDartColor(Colors.blue),
-    ),
-    WeekExpenditure(
-      week: "Week 3",
-      amt: 2,
-      barColor: charts.ColorUtil.fromDartColor(Colors.blue),
-    ),
-    WeekExpenditure(
-      week: "Week 4",
-      amt: 3,
-      barColor: charts.ColorUtil.fromDartColor(Colors.blue),
-    ),
-  ];
-
-  final List<DayExpenditure> data2 = [
-    DayExpenditure(
-      day: "Mon",
-      amt: 4,
-      barColor: charts.ColorUtil.fromDartColor(Colors.blue),
-    ),
-    DayExpenditure(
-      day: "Tues",
-      amt: 1,
-      barColor: charts.ColorUtil.fromDartColor(Colors.blue),
-    ),
-    DayExpenditure(
-      day: "Wed",
-      amt: 2,
-      barColor: charts.ColorUtil.fromDartColor(Colors.blue),
-    ),
-    DayExpenditure(
-      day: "Thurs",
-      amt: 3,
-      barColor: charts.ColorUtil.fromDartColor(Colors.blue),
-    ),
-    DayExpenditure(
-      day: "Fri",
-      amt: 3,
-      barColor: charts.ColorUtil.fromDartColor(Colors.blue),
-    ),
-    DayExpenditure(
-      day: "Sat",
-      amt: 3,
-      barColor: charts.ColorUtil.fromDartColor(Colors.blue),
-    ),
-    DayExpenditure(
-      day: "Sun",
-      amt: 3,
-      barColor: charts.ColorUtil.fromDartColor(Colors.blue),
-    ),
-
-  ];
-
+  final List<Oweobject> owelist= List<Oweobject>();
 
   @override
-
-
-
   void initState() {
     super.initState();
   }
@@ -103,52 +37,14 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
   FirebaseAuth auth = FirebaseAuth.instance;
   User curr = auth.currentUser;
-
-
-  //print(lentlist[0].amt);
-
-
     return Scaffold(
-      body:StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('transactions').where('receiver',isEqualTo:  auth.currentUser?.email).snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData){
-            return Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-              ),
-            );
-          }
-          else {
-            int a= snapshot.data.documents.length;
-          for(int i=0; i<a; i++){
-          final lent = snapshot.data.documents[i];
-          lentobject l= lentobject(
-              comment:  lent.data()['comment'],
-              amt:  lent.data()['amount'],
-              barColor: charts.ColorUtil.fromDartColor(Colors.blue));
-          lentlist.add(l);
-          };
-
-            /*return ListView.builder(
-              itemCount:snapshot.data.documents.length,
-              itemBuilder: (BuildContext context, int index)
-              {
-              final lent = snapshot.data.documents[index];
-              lentobject l= lentobject(
-                  comment:  lent.data()['comment'],
-                  amt:  lent.data()['amount'],
-                  barColor: charts.ColorUtil.fromDartColor(Colors.blue));
-              lentlist.add(l);
-              print(index);
-*/
-              return Padding(
+      body:
+               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-
                       Center(
                         child: Text(
                           "Welcome to your profile",
@@ -163,30 +59,81 @@ class _ProfileState extends State<Profile> {
                       SizedBox(
                           height: 100.0
                       ),
+                      StreamBuilder(              //STREAM FOR THE LENT CHART
+                        stream: FirebaseFirestore.instance.collection('transactions').where('receiver',isEqualTo:  auth.currentUser?.email).snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData){
+                            return Center(
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                                ),
+                              );
+                          }
+                          else {
+                            int a= snapshot.data.documents.length;
+                            for(int i=0; i<a; i++){                               //MAKING THE LIST FOR THE CHART
+                              final lent = snapshot.data.documents[i];
+                              lentobject l= lentobject(
+                                comment: lent.data()['comment'],
+                                amt: lent.data()['amount'],
+                                barColor: charts.ColorUtil.fromDartColor(Colors.blue)
+                              );
+                              lentlist.add(l);
+                            };
+                            return lentchart(                                   // CALLING THE LENT CHART CLASS
+                              data: lentlist,
+                            );
+                          }
+                        }
+                      ),
+                      SizedBox(
+                          height: 25.0
+                      ),
+                      StreamBuilder(                              //STREAM FOR THE OWE CHART
+                        stream: FirebaseFirestore.instance
+                          .collection('transactions')
+                          .where('member', arrayContains: auth.currentUser?.email)
+                          .snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Center(
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.blue),
+                              ),
+                            );
+                          }
+                          else {
+                            int b = snapshot.data.documents.length;
 
-                      lentchart(
-
-                        data: lentlist,
+                            for (int i = 0; i < b; i++) {                           //MAKING THE LIST FOR THE CHART
+                              final t = snapshot.data.documents[i];
+                              Map<dynamic, dynamic> sender = Map.from(t['sender']);
+                              Oweobject o = Oweobject(
+                                  name: t.data()['receiver'],
+                                  amt: sender[auth.currentUser?.email],
+                                  barColor: charts.ColorUtil.fromDartColor(Colors.blue)
+                              );
+                              owelist.add(o);
+                            };
+                            return owechart(                                        //CALLING OWECHART CLASS
+                              data: owelist,
+                            );
+                          }
+                        }
                       ),
 
                       SizedBox(
                           height: 8.0
                       ),
-
                     ],
                   ),
                 ),
-              );
-
-  //  }
-  //  );
-
-
+              ),
 
             ///////////////////WIDGET AND COLUMN AND SCROLL AND PADDING END HERE
-
-          }
-        }),
+    /*      }
+        }),*/
 
 
       floatingActionButton: FloatingActionButton.extended(
