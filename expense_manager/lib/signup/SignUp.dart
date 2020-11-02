@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_manager/fireauth.dart';
 import 'package:expense_manager/home.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 String _email;
 String _password;
@@ -274,26 +275,80 @@ Widget buildSignUp() {
       ),
     );
   }
-void signUp() async {
-      try{
-       // AuthResult
-        UserCredential user=await _fire.Create(_email, _password);
-        await user.user.updateProfile(displayName: _name,);
-        await user.user.updateEmail(_email);
-        _fire.Reload();
-        User curr=await _fire.Current();
+void signUp() async {                      //This function Signs the user up with firebase and handles any errors
+  if(_name!=null&& _username!=null) {           //The try block is called only if name and username are filled
+    try {
+      // AuthResult
+      UserCredential user = await _fire.Create(_email, _password);
+      await user.user.updateProfile(displayName: _name,);
+      await user.user.updateEmail(_email);
+      _fire.Reload();
+      User curr = await _fire.Current();
 
-        Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen(curr: curr)));
-/*
-      UserCredential result = await _fire.Create( _email, _password);
-        FirebaseUser user = result.user;
-        user.sendEmailVerification();
-        Firestore.instance.collection('users').document().setData({ 'name':_name , 'username':_username ,});
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
-      */}
-      catch(e){
-        print(e.message);
-      }
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => HomeScreen(curr: curr)));
     }
+    catch (e) {                                                      //Handles any errors in the email and password and prints them as toasts
+      String s = e.message;
+      if (e.message == null) {
+        s = "Fill in the required fields.";                    //Is printed instead of "null" if any of the fields are left blank
+      }
+      Fluttertoast.showToast(
+          msg: s,
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 3,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 12.0
+      );
+      /*setState(() {
+          loader=Colors.white;
+        });*/
+    }
+
   }
+
+  else{                                                               //Comes to else if The name or username is empty
+  Fluttertoast.showToast(                                             //Prints error toast
+  msg: "Display name and username can not be empty.",
+  toastLength: Toast.LENGTH_LONG,
+  gravity: ToastGravity.BOTTOM,
+  timeInSecForIosWeb: 3,
+  backgroundColor: Colors.red,
+  textColor: Colors.white,
+  fontSize: 12.0
+  );
+
+  }
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
