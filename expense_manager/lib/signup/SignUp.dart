@@ -275,9 +275,9 @@ Widget buildSignUp() {
       ),
     );
   }
-void signUp() async {                      //This function Signs the user up with firebase and handles any errors
-  if(_name!=null&& _username!=null) {           //The try block is called only if name and username are filled
-    try {
+  void signUp() async {                      //This function Signs the user up with firebase and handles any errors
+    if(_name!=null&& _username!=null) {           //The try block is called only if name and username are filled
+          try {
       // AuthResult
       UserCredential user = await _fire.Create(_email, _password);
       await user.user.updateProfile(displayName: _name,);
